@@ -85,6 +85,7 @@ class JobSerializer(serializers.ModelSerializer):
 
 class ApplicationSerializer(serializers.ModelSerializer):
     job_details = JobSerializer(source='job', read_only=True)
+    student_details = StudentProfileSerializer(source='student', read_only=True)
     
     class Meta:
         model = Application

@@ -36,6 +36,8 @@ class StudentProfileDetailView(generics.RetrieveUpdateAPIView):
         return self.request.user.student_profile
 
     def perform_update(self, serializer):
+        print(f"DEBUG: PATCH request from user: {self.request.user}")
+        print(f"DEBUG: Headers: {self.request.headers.get('Authorization', 'MISSING')}")
         instance = serializer.save()
         if 'resume' in self.request.FILES and instance.resume:
             import os

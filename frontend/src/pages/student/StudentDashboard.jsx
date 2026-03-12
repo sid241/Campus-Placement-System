@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
-import api from '../../api';
+import api, { BACKEND_URL } from '../../api';
 import { AuthContext } from '../../context/AuthContext';
 
 const StudentDashboard = () => {
@@ -33,13 +33,12 @@ const StudentDashboard = () => {
         formData.append('resume', resumeFile);
         
         try {
-            const res = await api.patch('student/profile/', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const res = await api.patch('student/profile/', formData);
             setProfile(res.data);
             setMessage("Resume uploaded and parsed successfully!");
         } catch (err) {
-            setMessage("Error uploading resume.");
+            const errorMsg = err.response?.data ? Object.values(err.response.data).flat().join(' ') : (err.message || "Error uploading resume.");
+            setMessage("Upload Failed: " + errorMsg);
         }
     };
 
@@ -59,7 +58,7 @@ const StudentDashboard = () => {
                     <p><strong>GPA:</strong> {profile.gpa || 'N/A'}</p>
                     <p><strong>Extracted Skills:</strong> {profile.skills || 'None'}</p>
                     {profile.resume && (
-                        <p><a href={profile.resume} target="_blank" rel="noreferrer">View Current Resume</a></p>
+                        <p><a href={profile.resume.startsWith('http') ? profile.resume : `${BACKEND_URL}${profile.resume}`} target="_blank" rel="noreferrer" className="btn btn-outline-primary btn-sm">View Current Resume</a></p>
                     )}
                 </Card.Body>
             </Card>

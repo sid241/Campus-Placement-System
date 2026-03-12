@@ -26,7 +26,8 @@ const Register = () => {
             setMessage('Registration successful! Redirecting to login...');
             setTimeout(() => navigate('/login'), 1500);
         } catch (err) {
-            setMessage('Error registering. Username may be taken or data invalid.');
+            const errorMsg = err.response?.data ? Object.values(err.response.data).flat().join(' ') : 'Error registering. Username may be taken or data invalid.';
+            setMessage(errorMsg);
         }
     };
 
